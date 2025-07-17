@@ -55,6 +55,8 @@ app.register_blueprint(file_upload)
 
 
 
+
+
 @app.route('/')
 def index():
     return jsonify({"message": "Welcome to the entropy ai world API"}), 200

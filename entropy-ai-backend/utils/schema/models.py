@@ -96,6 +96,9 @@ class CompanyDetails(db.Model):
     company_description = db.Column(db.Text, nullable=False)
     chatbot_expectations = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.now(timezone.utc), server_default=func.now())
+    files = db.relationship('CompanyFiles', backref='company', cascade='all, delete-orphan')
+   
+
 
 
 
@@ -103,7 +106,7 @@ class CompanyFiles(db.Model):
     __tablename__ = 'company_files'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    company_id = db.Column(UUID(as_uuid=True), nullable=False)
+    company_id = db.Column(UUID(as_uuid=True), db.ForeignKey('company_details.id'), nullable=False)
     file_name = db.Column(db.Text, nullable=False)
     file_type = db.Column(db.Text, nullable=False)  # e.g., 'pdf', 'url'
     file_url = db.Column(db.Text, nullable=False)

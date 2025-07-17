@@ -1,55 +1,63 @@
-from flask import Blueprint, request, jsonify
-from utils.schema.models import CompanyFiles, CompanyDetails, db
-from werkzeug.utils import secure_filename
-from uuid import UUID as UUID_check
+
+
+
+from flask import Flask,Blueprint, request, jsonify
 import os
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+
+# Directory to save uploaded files
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Allowed extensions (optional)
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'}
+
+# Make sure uploads folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 file_upload = Blueprint('upload_file', __name__)
 
 @file_upload.route("/upload-file", methods=["POST"])
 def upload_file():
-    company_id = request.form.get("company_id")
-    file = request.files.get("file")
+    # 1. Get company_id from form-data
+    company_id = request.form.get('company_id')
 
-    if not company_id or not file:
-        return jsonify({"error": "company_id and file are required"}), 400
+    if not company_id:
+        return jsonify({'error': 'Company ID is required'}), 400
 
-    # Validate UUID format
-    try:
-        uuid_obj = UUID_check(company_id)
-    except ValueError:
-        return jsonify({"error": "Invalid UUID format"}), 400
+    # 2. Check if file is in request
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part in the request'}), 400
 
-    company = CompanyDetails.query.get(uuid_obj)
-    if not company:
-        return jsonify({"error": "Invalid company ID"}), 400
+    file = request.files['file']
 
-    if file.filename == "":
-        return jsonify({"error": "No file selected"}), 400
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
 
-    filename = secure_filename(file.filename)
-    file_type = filename.split(".")[-1]
-    upload_folder = "uploads/"
+    # 3. Save file
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(save_path)
 
-    os.makedirs(upload_folder, exist_ok=True)
-    file_path = os.path.join(upload_folder, filename)
-    file.save(file_path)
+        # 4. Log and return response
+        print(f"✅ File uploaded: {filename}")
+        print(f"🆔 Company ID: {company_id}")
 
-    # Optional: make this a public URL
-    file_url = f"/uploads/{filename}"
+        return jsonify({
+            'message': 'File uploaded successfully',
+            'file_name': filename,
+            'company_id': company_id
+        }), 200
 
-    file_entry = CompanyFiles(
-        company_id=company.id,
-        file_name=filename,
-        file_type=file_type,
-        file_url=file_url
-    )
+    else:
+        return jsonify({'error': 'File type not allowed'}), 400
 
-    db.session.add(file_entry)
-    db.session.commit()
-
-    return jsonify({
-        "message": "File uploaded successfully",
-        "file_id": str(file_entry.id),
-        "file_url": file_url
-    }), 200
+if __name__ == '__main__':
+    app.run(debug=True)

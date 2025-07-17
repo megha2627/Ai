@@ -29,8 +29,14 @@ const FreeTrialForm = () => {
         "http://localhost:5000/free-trial",
         formData
       );
+
+      // ✅ Save company_id in localStorage
+      const companyId = response.data.company_id;
+      if (companyId) {
+        localStorage.setItem("company_id", companyId);
+      }
+
       setMessage(response.data.message);
-      navigate("/chatbot");
       setFormData({
         domain_name: "",
         tone: "",
@@ -38,12 +44,16 @@ const FreeTrialForm = () => {
         company_description: "",
         chatbot_expectations: "",
       });
+
+      // ✅ Optional: delay navigation to let user see the success message
+      setTimeout(() => navigate("/chatbot"), 1000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 pt-32 pb-12">

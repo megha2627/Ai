@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
 const LoginSignup = () => {
   const navigate = useNavigate();
   const [formType, setFormType] = useState("login");
@@ -66,8 +65,15 @@ const LoginSignup = () => {
       );
 
       if (formType === "login") {
-        // You can store token here if you’re using JWT
-        // localStorage.setItem("token", data.token);
+        // ⭐ Store tokens in localStorage
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
+        }
+        if (data.refresh_token) {
+          localStorage.setItem("refresh_token", data.refresh_token);
+        }
+
+        // ✅ Navigate to home
         navigate("/");
       } else {
         setFormType("login");

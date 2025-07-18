@@ -194,29 +194,6 @@ const EntropyAIApp = () => {
               </div>
 
               {/* Chatbot Types */}
-              <div>
-                <h3 className="text-xl font-semibold mb-4 text-pink-300">
-                  Select Chatbot Type
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {chatbotTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => setSelectedChatbotType(type.id)}
-                      className={`p-4 rounded-xl transition text-left shadow-sm ${
-                        selectedChatbotType === type.id
-                          ? "border border-fuchsia-500 bg-pink-800"
-                          : "border border-pink-300/20 hover:border-pink-400 hover:bg-pink-900/40"
-                      }`}
-                    >
-                      <h4 className="font-bold text-white">{type.title}</h4>
-                      <p className="text-sm text-pink-200">
-                        {type.description}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               <button
                 onClick={handleGenerateChatbot}

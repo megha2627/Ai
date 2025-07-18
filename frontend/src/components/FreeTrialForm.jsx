@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Sparkles, Rocket, Bot, ArrowRight, CheckCircle } from "lucide-react";
 
 const FreeTrialForm = () => {
   const [formData, setFormData] = useState({
@@ -10,10 +11,10 @@ const FreeTrialForm = () => {
     company_description: "",
     chatbot_expectations: "",
   });
-  const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,14 +30,13 @@ const FreeTrialForm = () => {
         "http://localhost:5000/free-trial",
         formData
       );
-
-      // ✅ Save company_id in localStorage
       const companyId = response.data.company_id;
+
       if (companyId) {
         localStorage.setItem("company_id", companyId);
       }
 
-      setMessage(response.data.message);
+      setMessage(response.data.message || "Successfully submitted!");
       setFormData({
         domain_name: "",
         tone: "",
@@ -45,7 +45,6 @@ const FreeTrialForm = () => {
         chatbot_expectations: "",
       });
 
-      // ✅ Optional: delay navigation to let user see the success message
       setTimeout(() => navigate("/chatbot"), 1000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong");
@@ -54,114 +53,209 @@ const FreeTrialForm = () => {
     }
   };
 
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 pt-32 pb-12">
-      <div className="w-full max-w-3xl bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl shadow-2xl p-10 text-white">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          🚀 Start Your Free Trial
-        </h2>
-        <p className="text-center text-gray-300 mb-8">
-          Fill out the details below to get started with your personalized AI
-          chatbot.
-        </p>
+    <div className="min-h-screen flex items-center justify-center px-4 pt-24 pb-12 bg-transparent relative overflow-hidden">
+      {/* Blurred animated gradients */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-[60rem] h-[60rem] bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse delay-2000 -translate-x-1/2 -translate-y-1/2"></div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block font-medium text-gray-200">
-              Company Domain Name
-            </label>
-            <input
-              type="text"
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-20 left-20 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-bounce delay-300 shadow-lg shadow-purple-500/50"></div>
+        <div className="absolute top-32 right-32 w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-bounce delay-700 shadow-lg shadow-blue-500/50"></div>
+        <div className="absolute bottom-32 left-32 w-2 h-2 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full animate-bounce delay-1000 shadow-lg shadow-indigo-500/50"></div>
+        <div className="absolute bottom-20 right-20 w-1.5 h-1.5 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full animate-bounce delay-1500 shadow-lg shadow-purple-500/50"></div>
+      </div>
+
+      <div className="w-full max-w-4xl relative z-10">
+        <div className="backdrop-blur-xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 rounded-3xl shadow-2xl p-12 text-white relative overflow-hidden">
+          {/* Header */}
+          <div className="text-center mb-12 relative z-10">
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative">
+                <Rocket className="w-16 h-16 text-purple-400 animate-pulse" />
+                <div className="absolute inset-0 w-16 h-16 bg-purple-500/20 rounded-full blur-xl animate-pulse"></div>
+              </div>
+            </div>
+
+            <h2 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 mb-4">
+              Start Your Free Trial
+            </h2>
+
+            <div className="flex justify-center items-center mb-6">
+              <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+              <Sparkles className="w-6 h-6 text-purple-400 mx-4 animate-pulse" />
+              <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-blue-400 rounded-full"></div>
+            </div>
+
+            <p className="text-xl text-gray-300 font-medium">
+              Fill out the details below to get started with your personalized
+              AI chatbot.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+            {/* Domain */}
+            <FormInput
+              label="Company Domain Name"
               name="domain_name"
               value={formData.domain_name}
               onChange={handleChange}
               placeholder="e.g. example.com"
               required
-              className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-          </div>
 
-          <div>
-            <label className="block font-medium text-gray-200">
-              Preferred Tone
-            </label>
-            <select
+            {/* Tone */}
+            <FormSelect
+              label="Preferred Tone"
               name="tone"
               value={formData.tone}
               onChange={handleChange}
+              options={["formal", "casual", "friendly", "professional"]}
               required
-              className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">Select Tone</option>
-              <option value="formal">Formal</option>
-              <option value="casual">Casual</option>
-              <option value="friendly">Friendly</option>
-              <option value="professional">Professional</option>
-            </select>
-          </div>
+            />
 
-          <div>
-            <label className="block font-medium text-gray-200">
-              Custom Tone (Optional)
-            </label>
-            <input
-              type="text"
+            {/* Custom Tone */}
+            <FormInput
+              label="Custom Tone (Optional)"
               name="custom_tone"
               value={formData.custom_tone}
               onChange={handleChange}
               placeholder="e.g. witty, empathetic"
-              className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-          </div>
 
-          <div>
-            <label className="block font-medium text-gray-200">
-              Company Description
-            </label>
-            <textarea
+            {/* Description */}
+            <FormTextarea
+              label="Company Description"
               name="company_description"
               value={formData.company_description}
               onChange={handleChange}
-              required
-              rows={3}
-              className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
               placeholder="Tell us about your company"
-            ></textarea>
-          </div>
+              required
+            />
 
-          <div>
-            <label className="block font-medium text-gray-200">
-              Chatbot Expectations
-            </label>
-            <textarea
+            {/* Expectations */}
+            <FormTextarea
+              label="Chatbot Expectations"
               name="chatbot_expectations"
               value={formData.chatbot_expectations}
               onChange={handleChange}
-              required
-              rows={3}
-              className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
               placeholder="What do you expect from your chatbot?"
-            ></textarea>
-          </div>
+              required
+            />
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 py-3 rounded-xl font-semibold text-white hover:from-purple-700 hover:to-indigo-700 transition-all duration-300"
-            disabled={loading}
-          >
-            {loading ? "Submitting..." : "Start Free Trial"}
-          </button>
+            {/* Submit Button */}
+            <div className="relative group">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 py-5 rounded-xl font-bold text-white text-xl hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 border-2 border-white/20 hover:border-white/40 transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {loading ? (
+                  <>
+                    <Bot className="w-6 h-6 animate-spin" />
+                    <span className="relative z-10">
+                      Creating Your Chatbot...
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Rocket className="w-6 h-6 animate-pulse" />
+                    <span className="relative z-10">Start Free Trial</span>
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
+                  </>
+                )}
+              </button>
+            </div>
 
-          {message && (
-            <p className="text-center text-green-400 font-medium mt-3">
-              {message}
-            </p>
-          )}
-        </form>
+            {/* Message Display */}
+            {message && (
+              <div className="relative">
+                <div className="backdrop-blur-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-4 flex items-center gap-3 animate-pulse">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <p className="text-green-300 font-medium text-lg">
+                    {message}
+                  </p>
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );
 };
+
+// Reusable Inputs
+
+const FormInput = ({ label, name, value, onChange, placeholder, required }) => (
+  <div className="group">
+    <label className="block font-bold text-gray-200 mb-3 text-lg">
+      {label}
+    </label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      className="w-full px-6 py-4 bg-gradient-to-r from-white/10 to-white/5 border border-white/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 text-lg backdrop-blur-sm group-hover:border-white/40"
+    />
+  </div>
+);
+
+const FormTextarea = ({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  required,
+}) => (
+  <div className="group">
+    <label className="block font-bold text-gray-200 mb-3 text-lg">
+      {label}
+    </label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      rows={4}
+      className="w-full px-6 py-4 bg-gradient-to-r from-white/10 to-white/5 border border-white/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 text-lg backdrop-blur-sm resize-none group-hover:border-white/40"
+    ></textarea>
+  </div>
+);
+
+const FormSelect = ({ label, name, value, onChange, options, required }) => (
+  <div className="group">
+    <label className="block font-bold text-gray-200 mb-3 text-lg">
+      {label}
+    </label>
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      required={required}
+      className="w-full px-6 py-4 bg-gradient-to-r from-white/10 to-white/5 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 text-lg backdrop-blur-sm group-hover:border-white/40"
+    >
+      <option value="" className="bg-gray-800">
+        Select Tone
+      </option>
+      {options.map((opt) => (
+        <option key={opt} value={opt} className="bg-gray-800 capitalize">
+          {opt}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
 export default FreeTrialForm;

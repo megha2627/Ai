@@ -4,19 +4,18 @@ import Footer from "./Footer";
 const PricingSection = () => {
   return (
     <div className="min-h-screen text-white">
-      {/* Pricing Section */}
       <div className="max-w-7xl mx-auto py-24 px-6 mt-10">
-        <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-400 to-indigo-400 text-center mb-12 drop-shadow-[0_0_20px_rgba(129,140,248,0.4)]">
+        <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-indigo-400 text-center mb-12 drop-shadow-[0_0_25px_rgba(129,140,248,0.6)]">
           Choose Your Plan
         </h2>
+
         <p className="text-lg md:text-xl text-gray-300 mb-16 text-center max-w-3xl mx-auto leading-relaxed">
           Select the perfect plan for your business needs and unlock the power
-          of AI with EntropyAI
+          of AI with{" "}
+          <span className="text-purple-300 font-semibold">EntropyAI</span>.
         </p>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Plan Data Array */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {[
             {
               name: "Starter",
@@ -65,8 +64,10 @@ const PricingSection = () => {
           ].map((plan, i) => (
             <div
               key={i}
-              className={`relative rounded-2xl p-8 transition-all duration-300 shadow-lg hover:shadow-2xl hover:-translate-y-2 backdrop-blur-lg border border-white/10 ${
-                plan.popular ? "z-10 -translate-y-4 bg-white/10" : "bg-white/5"
+              className={`relative rounded-2xl p-8 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2 backdrop-blur-lg border border-white/10 ${
+                plan.popular
+                  ? "z-10 -translate-y-4 bg-gradient-to-br from-purple-900/40 to-blue-900/40 shadow-[0_0_40px_rgba(139,92,246,0.4)]"
+                  : "bg-white/5 hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]"
               }`}
             >
               {plan.popular && (
@@ -75,16 +76,18 @@ const PricingSection = () => {
                 </span>
               )}
 
-              <h3 className="text-2xl font-semibold text-cyan-300 mb-3">
+              <h3 className="text-2xl font-bold text-blue-300 mb-3 tracking-wide">
                 {plan.name}
               </h3>
-              <p className="text-4xl font-bold text-white mb-1">{plan.price}</p>
+              <p className="text-4xl font-extrabold text-white mb-1">
+                {plan.price}
+              </p>
               <p className="text-sm text-gray-400 mb-6">{plan.subtitle}</p>
 
-              <ul className="space-y-3 text-sm text-gray-200 mb-8">
+              <ul className="space-y-3 text-sm text-blue-100 mb-10">
                 {plan.features.map((f, index) => (
                   <li key={index} className="flex items-center">
-                    <span className="text-green-400 mr-2">✅</span> {f}
+                    <span className="text-green-400 mr-2 text-lg">✔️</span> {f}
                   </li>
                 ))}
               </ul>
@@ -96,8 +99,7 @@ const PricingSection = () => {
           ))}
         </div>
       </div>
-
-    
+      
     </div>
   );
 };

@@ -85,7 +85,7 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 flex items-center justify-center p-4 relative overflow-hidden text-white">
+    <div className="min-h-screen bg-transparent flex items-center justify-center px-4">
       {/* Animated Blurred Background Lights */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute -top-48 -left-32 w-96 h-96 bg-purple-600 rounded-full blur-3xl opacity-20 animate-pulse" />

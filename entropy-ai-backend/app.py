@@ -2,10 +2,13 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
+load_dotenv()
+
 from datetime import timedelta
 from utils.schema.models import db, models, ma
 from utils.authentication.auth_helper import jwt
 from flask_migrate import Migrate
+
 
 
 load_dotenv()
